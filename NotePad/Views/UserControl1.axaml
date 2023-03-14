@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="using:NotePad.ViewModels"
+             x:Class="NotePad.Views.UserControl1">
+
+	
+		<DockPanel>
+			<Button DockPanel.Dock="Top" Command="{Binding $parent[Window].DataContext.GoTop}">../</Button>
+			<Button DockPanel.Dock="Top">
+				Save
+			</Button>
+			<Button DockPanel.Dock="Top" Command="{Binding $parent[Window].DataContext.GoDown}" >
+				Open
+			</Button>
+					<ListBox Height="140" SelectedItem="{Binding $parent[Window].DataContext.SelectedItem}" DockPanel.Dock="Top" Items="{Binding Items}">
+						<ListBox.Resources>
+						</ListBox.Resources>
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal">
+										<StackPanel Width="320" Orientation="Horizontal">
+											<Image Width="15" Height="15" Source="C:\Users\Rik\source\repos\notepad\NotePad\Assets\ikonka_papka-2048x1638-1-1024x819.jpg"/>
+											<TextBlock Text="{Binding DIR}"/>
+										</StackPanel>
+								</StackPanel>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				   <ListBox Height="140" DockPanel.Dock="Top" Items="{Binding Items}">
+						   <ListBox.ItemTemplate>
+							   <DataTemplate>
+									<StackPanel Orientation="Horizontal">
+											<StackPanel Width="320" Orientation="Horizontal">
+												<Image Width="15" Height="15" Source="C:\Users\Rik\source\repos\notepad\NotePad\Assets\136182120886ae39788ff82f1f5bb032--computer-file-definitions.jpg"/>
+												<TextBlock Text="{Binding PATH}"/>
+											</StackPanel>
+									</StackPanel>
+							   </DataTemplate>
+						   </ListBox.ItemTemplate>
+				   </ListBox>
+			
+		</DockPanel>
+</UserControl>

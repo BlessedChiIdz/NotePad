@@ -11,11 +11,15 @@ namespace NotePad.ViewModels
 {
     public partial class UserControl2 : ViewModelBase
     {
-        public ObservableCollection<fileModel> Items { get; }
-
-        public UserControl2()
+        public string text;
+        public string Text 
         {
-            
+            get => text;
+            set => SetProperty(ref text, value);
+        }
+        public UserControl2(string stringArg)
+        {
+            Text = stringArg;
         }
     }
 }

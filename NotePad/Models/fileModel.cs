@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace NotePad.Models
 {
-    public class fileModel
+    public class DirModel
     {
         public string PATH { get; set; }
-        public string DIR { get; set; }
+    }
+
+    public class FileModel
+    {
+        public string PATH { get; set; }
     }
 }

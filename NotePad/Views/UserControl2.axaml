@@ -6,13 +6,13 @@
 			 xmlns:vm="using:NotePad.ViewModels"
              x:Class="NotePad.Views.UserControl2">
 			<Grid RowDefinitions="*,0.1*,0.1*">
-				<TextBox Grid.Row="0">
+				<TextBox Grid.Row="0" Text="{Binding Text}">
 				</TextBox>
 				<Button
 					Command="{Binding $parent[Window].DataContext.AddItem}"
 					Grid.Row="1" Width="350">Open</Button>
 				<Button
-					Command="{Binding $parent[Window].DataContext.AddItem}"
+					Command="{Binding $parent[Window].DataContext.AddItem3}"
 					Grid.Row="2" Width="350">Save</Button>
 			</Grid>
 </UserControl>

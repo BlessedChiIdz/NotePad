@@ -15,11 +15,11 @@ namespace NotePad.Serv
     {
         public static string fullPath = Path.GetFullPath(@"../../../");
         public string[] files = Directory.GetFiles(fullPath);
-        public fileModel save;
+        public FileModel save;
         public int i = 0;
 
 
-        public IEnumerable<fileModel> GetFiles() => new List<fileModel>()
+        public IEnumerable<FileModel> GetFiles() => new List<FileModel>()
             {
                 
             };

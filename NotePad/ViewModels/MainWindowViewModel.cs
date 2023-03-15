@@ -6,17 +6,24 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using Avalonia.Controls.Shapes;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using NotePad.Models;
 using NotePad.Serv;
 namespace NotePad.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public partial class MainWindowViewModel : ViewModelBase
     {
         public UserControl1 List { get; set; }
         public UserControl2 Dirs { get; set; }
-        public ObservableCollection<fileModel> QWE = new ObservableCollection<fileModel>();
+        public ObservableCollection<FileModel> QWE = new ObservableCollection<FileModel>();
+        public ObservableCollection<DirModel> ZXC = new ObservableCollection<DirModel>();
         ViewModelBase content;
+        public static string fullPath = System.IO.Path.GetFullPath(@"../../../");
+        public string[] files = Directory.GetFiles(fullPath);
+        public string[] Dir = Directory.GetDirectories(fullPath);
+        public string ErrorFlag;
         public ViewModelBase Content
         {
             get => content;
@@ -25,90 +32,113 @@ namespace NotePad.ViewModels
         public void GoTop()
         {
             QWE.Clear();
+            ZXC.Clear();
             int qwe=0;
             fullPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(fullPath, @"..\"));
             files = Directory.GetFiles(fullPath);
             Dir = Directory.GetDirectories(fullPath);
             for (int i = 0; i < files.Count(); i++)
             {
-                QWE.Add(new fileModel { PATH = files[i]});
-            }
-            if (QWE.Count() < Dir.Count())
-            {
-                 qwe = Dir.Count() - QWE.Count();
-            }
-            for(int i = 0; i < qwe; i++)
-            {
-                QWE.Add(new fileModel { });
+                QWE.Add(new FileModel { PATH = files[i] });
             }
             for (int i = 0; i < Dir.Count(); i++)
             {
-                
-                QWE[i].DIR = Dir[i];
+                ZXC.Add(new DirModel { PATH = Dir[i] });
             }
-            Content = new UserControl1(QWE);
+            Content = new UserControl1(QWE,ZXC);
         }
 
-        public void GoDown()
+        public void ReadFromFile()
+        {
+            if (SelectedFile == null) { }
+            else { 
+                string path = SelectedFile.PATH;
+                using (StreamReader reader = new StreamReader(path))
+                {
+                    string text = reader.ReadToEnd();
+                    Text = text;
+                }
+            }
+            Content = new UserControl2(Text);
+        }
+        public void WriteToFile()
+        {
+            using (StreamWriter writer = new StreamWriter(SelectedFile.PATH, false))
+            {
+                 writer.WriteLine(Text);
+            }
+            Content = new UserControl2("");
+        }
+
+        public int GoDown()
         {
             QWE.Clear();
+            ZXC.Clear();
             int qwe = 0;
-            
-            if(SelectedItem.DIR == null) { }
+            if(SelectedDir == null)
+            {
+                QWE.Add(new FileModel { PATH = "Не выбрана папка, нажмите ../" });
+                Content = new UserControl1(QWE, ZXC);
+            }
             else { 
-            fullPath = System.IO.Path.GetFullPath(SelectedItem.DIR);
+            fullPath = System.IO.Path.GetFullPath(SelectedDir.PATH);
             files = Directory.GetFiles(fullPath);
             Dir = Directory.GetDirectories(fullPath);
-            for (int i = 0; i < files.Count(); i++)
-            {
-                QWE.Add(new fileModel { PATH = files[i] });
+            for(int i = 0; i < files.Count(); i++)
+                {
+                    QWE.Add(new FileModel { PATH = files[i] });
+                }
+                for (int i = 0; i < Dir.Count(); i++)
+                {
+                    ZXC.Add(new DirModel { PATH = Dir[i] });
+                }
+                Content = new UserControl1(QWE,ZXC);
             }
-            if (QWE.Count() < Dir.Count())
-            {
-                qwe = Dir.Count() - QWE.Count();
-            }
-            for (int i = 0; i < qwe; i++)
-            {
-                QWE.Add(new fileModel { });
-            }
-            for (int i = 0; i < Dir.Count(); i++)
-            {
-
-                QWE[i].DIR = Dir[i];
-            }
-            Content = new UserControl1(QWE);
-            }
+            return 1;
         }
-        fileModel selectedItem;
-        string QWEpath;
-        public fileModel SelectedItem
+        string text;
+        public string Text
         {
-            get => selectedItem;
-            set => SetProperty(ref selectedItem, value);
+            get => text;
+            set => SetProperty(ref text, value);
         }
-        
+        DirModel selectedDir;
+        public DirModel SelectedDir
+        {
+            get => selectedDir;
+            set => SetProperty(ref selectedDir, value);
+        }
+        FileModel selectedFile;
+        public FileModel SelectedFile
+        {
+            
+            get => selectedFile;
+            set => SetProperty(ref selectedFile, value);
+        }
 
-        public static string fullPath = System.IO.Path.GetFullPath(@"../../../");
-        public string[] files = Directory.GetFiles(fullPath);
-        public string[] Dir = Directory.GetDirectories(fullPath);
 
-        public string PATH { get ; set; }
-        public string FILES { get; set; }
-        public string DIRS { get; set; }
 
 
         public MainWindowViewModel(Database db)
         {
             for (int i = 0; i < files.Count(); i++)
             {
-                QWE.Add(new fileModel { PATH =  files[i],DIR = Dir[i]  });
+                QWE.Add(new FileModel { PATH = files[i] });
             }
-            Content = Dirs = new UserControl2();
-            List = new UserControl1(QWE);
+            for (int i = 0; i < Dir.Count(); i++)
+            {
+                ZXC.Add(new DirModel { PATH = Dir[i] }) ;
+            }
+            Content = Dirs = new UserControl2("");
+            List = new UserControl1(QWE,ZXC);
         }
         public void AddItem()
         {
-            Content = new UserControl1(QWE);
+            Content = new UserControl1(QWE,ZXC);
+        }
+        public void AddItem3()
+        {
+            Content = new UserControl3(QWE, ZXC);
         }
     }
 }

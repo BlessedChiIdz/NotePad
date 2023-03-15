@@ -12,12 +12,12 @@ using NotePad.Models;
 
 namespace NotePad.ViewModels
 {
-    public partial class UserControl1 : ViewModelBase
+    public partial class UserControl3 : ViewModelBase
     {
         public ObservableCollection<FileModel> Files { get; }
         public ObservableCollection<DirModel> Dires { get; }
 
-        public UserControl1(IEnumerable<FileModel> file, IEnumerable<DirModel> file2)
+        public UserControl3(IEnumerable<FileModel> file, IEnumerable<DirModel> file2)
         {
             Files = new ObservableCollection<FileModel>(file);
             Dires = new ObservableCollection<DirModel>(file2);
